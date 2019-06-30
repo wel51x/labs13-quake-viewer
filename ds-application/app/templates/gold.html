@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title>QuakeSpect - Financial Markets Impact: Gold</title>
+{% endblock headers %}
+
+{% block body %}
+<div class="col-md-12 px-0">
+    <h1 class="display-4" style="margin-top: 10px;">Gold Analysis</h1>
+    <p>The occurrence of an earthquake has minimal impact of the direction of Gold prices in the
+            subsequent 7-day, 14-day and 1-month intervals as indicated in the charts below. The actual
+            performances ranged between a drop of .087% and a gain of 1.73% after seven days; a drop of 1.48%
+            and a gain of 3.11% after 14 days and a drop of 1.49% and a gain of 2.95% after a month.
+            However in the vast majority of instances (Magnitude 7.1 or less), the performance averages
+            between flat and a gain of .01%.</p>
+    <p>NOTE: Data sourced from the London Metals Exchange via the St. Louis Fed</p>
+</div>
+
+<h4>Gold Performance 7 Days after Incident</h4>
+<iframe style="width: 100%; height: 600; margin-bottom: 1rem" frameborder="0" scrolling="no" src="//plot.ly/~wel51x/144.embed"></iframe>
+
+<h4>Gold Performance 14 Days after Incident</h4>
+<iframe style="width: 100%; height: 600; margin-bottom: 1rem" frameborder="0" scrolling="no" src="//plot.ly/~wel51x/146.embed"></iframe>
+
+<h4>Gold Performance 1 Month after Incident</h4>
+<iframe style="width: 100%; height: 600; margin-bottom: 1rem" frameborder="0" scrolling="no" src="//plot.ly/~wel51x/140.embed"></iframe>
+
+<h4>Incident Counts by Magnitude</h4>
+<a href="/static/gold_counts.png"><img src="/static/gold_counts.png" alt="Gold Counts" width="100%"/></a>
+{% endblock body %}

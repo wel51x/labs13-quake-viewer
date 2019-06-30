@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title>Activity Analysis</title>
+{% endblock headers %}
+
+{% block body %}
+<div>
+    <h1 class="display-4" style="margin-top: 10px;">Activity Analysis</h1>
+    
+    <p>The figure below shows the frequency of seismic activites in US caused by various factors.</p> 
+    <img src="{{ url_for('static', filename='images/shilpa/seismic_activities.svg') }}" alt="" >
+    <p>It is apparent that most of the seismic activities happen because of earthquakes. But what are their magnitudes?</p>
+    <p>This table shows the occurences of earthquakes of different magnitude. Most earthquakes that occur in US are between the magnitudes of 4 and 5 on the richter scale.</p>
+    <div class="card table-card">
+        <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Magnitude</th>
+              <th scope="col">Number of Occurence</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+              <td>4-5</td>
+              <td>6724.0</td>
+            </tr>
+            <tr>
+              <td>5-6</td>
+              <td>1032.0</td>
+            </tr>
+            <tr>
+              <td>6-7</td>
+              <td>187.0</td>
+            </tr>
+            <tr>
+              <td>7-8</td>
+              <td>23.0</td>
+            </tr>
+            <tr>
+              <td>8-9</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <td>9-10</td>
+              <td>0.0</td>
+            </tr>
+            
+            </tbody>
+        </table>
+    </div>
+    <img src="{{ url_for('static', filename='images/shilpa/occurence.svg') }}" alt="" >
+    <p>Next, we wanted to find out the years with minimum and maximum earthquakes. Since USGS data before 1965 is inconsistent, the range used here is from 1965 to 2019.</p>
+    <p>Year with minimum earthquakes 1972<br>Year with maximum earthquakes 1980<br>Maximum 550<br>Minimum 31</p>
+    <img src="{{ url_for('static', filename='images/shilpa/Freq_by_year.svg') }}" alt="" >
+    <p>Figure below depicts the regression line to show the relationship between magnitude and depth. It can be infered that magnitude does not have a linear relationship with depth.</p>
+    <img src="{{ url_for('static', filename='images/shilpa/relationship.svg') }}" alt="" >
+
+</div>
+{% endblock body %}

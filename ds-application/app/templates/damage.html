@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title></title>
+{% endblock headers %}
+
+{% block body %}
+<div>
+    <h1 class="display-4" style="margin-top: 10px;">Damage</h1>
+    <p class="lead">
+        Damage, Deaths, and Injuries and How Those Relate to Magnitude
+    </p>
+    <iframe width="1200px" height="800px" frameborder="0" scrolling="no" src="https://plot.ly/~dlromanoff/129.embed"></iframe>
+    <p>Moving the mouse over the graph will provide you more specific information. The magnitude of each earthquake can be located in the missing category. It is the first number listed.</p> 
+    <p>The magnitude of each earthquake can be located in the missing category. It is the first number listed. The above chart shows the mean number of occurrances at each magnitude for each of the five categories. The occurrance of an earthquake with a magnitude greater than 7.0 is uncommon. Though there is data for those events that indicate greater loss of life, more injuries and missing, and a greater number of houses damaged and destroyed, the chart is not indicating the number of earthquake incidents. It is showing the mean at a specific magnitude based on the data collected. The spread of the data is quite large. Data collected was for earthquakes world wide. As such, not all earthquakes occurred in a location where lives could be affected. This chart is slightly skewed to the right which is not surprising. As the intesity of an earthquake increases, the chance of damage also increases.</p>
+    <a href="https://colab.research.google.com/github/labs13-quake-viewer/ds-notebooks/blob/master/Plots.ipynb" target="blank" class="btn btn-primary">View Notebook</a>
+</div>
+{% endblock body %}

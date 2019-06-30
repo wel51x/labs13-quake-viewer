@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title>QuakeSpect - Financial Markets Impact: Intermarket</title>
+{% endblock headers %}
+
+{% block body %}
+<div class="col-md-14 px-0">
+    <h1 class="display-4" style="margin-top: 10px;">Gold - S&P 500 Intermarket Analysis</h1>
+    <p>This last chart shows a side-by-side comparison of the performance in the Gold and S&P 500
+         markets one month after an incident. While the trend in the majority of instance is for
+         both markets to have slight gains, it is by no means consistent, and the markets can
+         diverge significantly.</p>
+         <p>NOTE: Gold data sourced from the London Metals Exchange via the St. Louis Fed; 
+             S&P 500 data sourced from Yahoo!Finance</p>
+         <br/>
+         <h2>Gold vs S&P 500 Performance 30 Days after Incident (WorldWide)</h2>
+        <br/>
+        <iframe style="width: 100%; height: 700; margin-bottom: 1rem" frameborder="0" scrolling="no" src="//plot.ly/~wel51x/150.embed"></iframe>
+        <p></p>
+        <br/>
+        <h4>Gold Incident Counts:</h4>
+        <img src="/static/gold_counts.png" alt="Gold Counts" width="1100" height="100" />
+        <p></p>
+        <br/>
+        <h4>S&P 500 Incident Counts:</h4>
+        <img src="/static/sp500_counts.png" alt="S&P500 Counts" width="1100" height="100" />
+</div>
+{% endblock body %}

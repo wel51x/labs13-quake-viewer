@@ -1,0 +1,219 @@
+{% extends 'layout.html' %}
+{% block headers %}
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+<script>
+    L_NO_TOUCH = false;
+    L_DISABLE_3D = false;
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.4.0/dist/leaflet.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> -->
+<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.4.0/dist/leaflet.css"/>
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/> -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"/> -->
+<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css"/> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+<link rel="stylesheet" href="https://rawcdn.githack.com/python-visualization/folium/master/folium/templates/leaflet.awesome.rotate.css"/>
+<!-- <meta name="viewport" content="width=device-width,
+    initial-scale=1.0, maximum-scale=1.0, user-scalable=no" /> -->
+    
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script src="https://rawcdn.githack.com/nezasa/iso8601-js-period/master/iso8601.min.js"></script>
+<script src="https://rawcdn.githack.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/default.min.css"/>
+<link rel="stylesheet" href="https://rawcdn.githack.com/socib/Leaflet.TimeDimension/master/dist/leaflet.timedimension.control.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.fullscreen/1.4.2/Control.FullScreen.min.css"/>
+<title>QuakeSpect - Map</title>
+{% endblock headers %}
+
+{% block body %}
+<div class="col-md-8 px-0">
+    <h1 class="display-4" style="margin-top: 10px;">Interactive Map</h1>
+    <p class="lead">
+        This map animates earthquake events over time based on user-defined parameters. Pause the animation to click on earthquakes and view their details. Results are limited to 20,000 events.
+    </p>
+    <p class="small">
+        <em>Data provided by the <a href="https://earthquake.usgs.gov/earthquakes/search/">USGS Earthquake Catalog</a>.</em>
+    </p>
+</div>
+
+<div id="accordion">
+    <div class="card bg-light">
+        <h6 class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+            Edit Map Filters &#9662;
+        </h6>
+        <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordion">
+            <div class="card-body">
+                <form action="{{ url_for('map') }}" method="POST">
+                    <div class="form-row">
+                        <div class="form-group col-sm-8">
+                            <label>Date Range (UTC)</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="starttime" id="starttime" value="{{ qry_params['starttime'] }}">
+                                <input type="text" class="form-control" name="endtime" id="endtime" value="{{ qry_params['endtime'] }}">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label for="min-magnitude">Min. Magnitude</label>
+                            <input type="text" class="form-control" name="minmagnitude" id="minmagnitude" value="{{ qry_params['minmagnitude'] }}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-sm-4">
+                            <label>Frame Period</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="period_amt" id="period_amt" value="{{ map_params['period_amt'] }}">
+                                <select class="form-control" name="period_unit" id="period_unit">
+                                    <option value="{{ map_params['period_unit'] }}" selected disabled hidden>{{ map_params['period_unit'] }}</option>
+                                    <option value="Hours">Hours</option>
+                                    <option value="Days">Days</option>
+                                    <option value="Weeks">Weeks</option>
+                                    <option value="Months">Months</option>
+                                </select> 
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Map</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="folium-map" id="map_44e433a56daf47828204a757bf0397d3" style="width: 100%; height: 70vh;"></div>
+</div>
+{% endblock body %}
+
+{% block outofbody %}
+<script type="text/javascript">
+    var fault_feats = {{ fault_feats|tojson|safe }}
+    var quake_feats = {{ quake_feats|tojson|safe }}
+
+    var map_44e433a56daf47828204a757bf0397d3 = L.map(
+        "map_44e433a56daf47828204a757bf0397d3",
+        {
+            center: [0, 0],
+            crs: L.CRS.EPSG3857,
+            zoom: 1,
+            zoomControl: true,
+            preferCanvas: false,
+            worldCopyJump: true,
+        }
+    );
+
+    var tile_layer_486c65aebe4e4695a24bfd3210256ab8 = L.tileLayer(
+        "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+        {"attribution": "\u0026copy; \u003ca href=\"http://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"http://cartodb.com/attributions\"\u003eCartoDB\u003c/a\u003e, CartoDB \u003ca href =\"http://cartodb.com/attributions\"\u003eattributions\u003c/a\u003e", "detectRetina": false, "maxNativeZoom": 5, "maxZoom": 5, "minZoom": 1.5, "noWrap": false, "opacity": 1, "subdomains": "abc", "tms": false}
+    ).addTo(map_44e433a56daf47828204a757bf0397d3);
+
+
+    function geo_json_2aa36ac307604aeba1b4dc4043aad6de_styler(feature) {
+        switch(feature.id) {
+            default:
+                return {"color": "red", "weight": 0.5};
+        }
+    }
+    function geo_json_2aa36ac307604aeba1b4dc4043aad6de_onEachFeature(feature, layer) {
+        layer.on({
+            click: function(e) {
+                map_44e433a56daf47828204a757bf0397d3.fitBounds(e.target.getBounds());
+            }
+        });
+    };
+    var geo_json_2aa36ac307604aeba1b4dc4043aad6de = L.geoJson(null, {
+            onEachFeature: geo_json_2aa36ac307604aeba1b4dc4043aad6de_onEachFeature,
+        
+            style: geo_json_2aa36ac307604aeba1b4dc4043aad6de_styler,
+    }).addTo(map_44e433a56daf47828204a757bf0397d3);
+        geo_json_2aa36ac307604aeba1b4dc4043aad6de.addData(fault_feats);
+    
+        L.Control.TimeDimensionCustom = L.Control.TimeDimension.extend({
+            _getDisplayDateFormat: function(date){
+                var newdate = new moment(date);
+                console.log(newdate)
+                return newdate.format("YYYY-MM-DD HH UTC");
+            }
+        });
+        map_44e433a56daf47828204a757bf0397d3.timeDimension = L.timeDimension(
+            {
+                period: "{{ map_params['period']|safe }}",
+            }
+        );
+        var timeDimensionControl = new L.Control.TimeDimensionCustom(
+            {
+                "autoPlay": true, 
+                "loopButton": false, 
+                "maxSpeed": 10, 
+                "minSpeed": 0.1, 
+                "playerOptions": {
+                    "loop": true, 
+                    "startOver": true, 
+                    "transitionTime": 200
+                }, 
+                "position": "bottomleft", 
+                "timeSliderDragUpdate": true
+            }
+        );
+        map_44e433a56daf47828204a757bf0397d3.addControl(this.timeDimensionControl);
+
+        var geoJsonLayer = L.geoJson(quake_feats, {
+                pointToLayer: function (feature, latLng) {
+                    if (feature.properties.icon == 'marker') {
+                        if(feature.properties.iconstyle){
+                            return new L.Marker(latLng, {
+                                icon: L.icon(feature.properties.iconstyle)});
+                        }
+                        //else
+                        return new L.Marker(latLng);
+                    }
+                    if (feature.properties.icon == 'circle') {
+                        if (feature.properties.iconstyle) {
+                            return new L.circleMarker(latLng, feature.properties.iconstyle)
+                            };
+                        //else
+                        return new L.circleMarker(latLng);
+                    }
+                    //else
+
+                    return new L.Marker(latLng);
+                },
+                style: function (feature) {
+                    return feature.properties.style;
+                },
+                onEachFeature: function(feature, layer) {
+                    if (feature.properties.popup) {
+                    layer.bindPopup(feature.properties.popup);
+                    }
+                }
+            })
+
+        var timestamped_geo_json_8a53a87b8da7449594009d667eb9fc35 = L.timeDimension.layer.geoJson(
+            geoJsonLayer,
+            {
+                updateTimeDimension: true,
+                addlastPoint: true,
+                duration: "{{ map_params['duration']|safe }}",
+            }
+        ).addTo(map_44e433a56daf47828204a757bf0397d3);
+    
+
+        L.control.fullscreen(
+            {
+                "forceSeparateButton": true, 
+                "position": "topright", 
+                "title": "Full Screen", 
+                "titleCancel": 
+                "Exit Full Screen"
+            }
+        ).addTo(map_44e433a56daf47828204a757bf0397d3);
+
+</script>
+{% endblock outofbody %}

@@ -1,0 +1,150 @@
+.navbar-nav li {
+  margin-right: 1rem;
+}
+
+div.card.map-card {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.danielles-grid {
+  /* position: absolute; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* left: 50px; */
+  width: 100%;
+  height: auto;
+}
+
+body {
+  color: #fff;
+}
+
+.card {
+  color: #000;
+}
+
+.table-card {
+  padding:20px;
+  margin: 20px 0;
+}
+
+.body-padding{
+  height: 10vh;
+}
+
+div.card.table-card.winstons {
+  width: calc(40px + 100%);
+}
+
+.test-figure {
+  display: block;
+}
+
+.notebook-btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.qs-nav-logo {
+  width: 150px;
+  height: auto;
+}
+
+.footer {
+  background-color: #000;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 10px;
+}
+
+.footer p {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer a {
+  margin: 0 auto;
+}
+
+.footer a button{
+  /* color: #fff; */
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+section.cta {
+  height: 100%;
+  width: 100%;
+  background-image: url("/static/images/bg.png");
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+div.topics-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-gap: 2em;
+  align-items: center;
+  width: 80%;
+  margin: auto;
+}
+
+h2.topics-header {
+  color: #C5BD99;
+}
+
+img.topics-icon {
+  /* width: 200%;
+  height: 200%; */
+}
+
+section.topics {
+  margin-top: 10vh;
+  margin-bottom: 10vh;
+}
+
+div.team-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 2em;
+}
+
+div.icon-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 1em;
+}
+
+h2.team-header {
+  text-align: center;
+  margin-top: 10vh;
+  margin-bottom: 5vh;
+  color: #C5BD99;
+}
+
+div.cta-map-container {
+  height: 100%;
+  padding-top: 5vh;
+}
+
+a.int-map-link {
+  margin: auto;
+  margin-top: 2em;
+  width: 100%;
+}
+
+button.int-map-button {
+  background-color: #fff;
+  border: 2px solid #701112;
+  color: #701112;
+  margin: auto;
+  margin-top: 2em;
+  font-weight: 800;
+  font-size: 20px;
+}

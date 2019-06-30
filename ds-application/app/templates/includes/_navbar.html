@@ -1,0 +1,58 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='images/qs-logo-white.svg') }}" alt="" class="qs-nav-logo"></a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" style="cursor: pointer;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Events
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <p class="dropdown-item" style="font-weight:800; margin: 0;">World Events</p>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('map') }}">Live Map</a>
+              <div class="dropdown-divider"></div>
+              <p class="dropdown-item" style="font-weight:800; margin: 0;">US Events</p>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('us_events') }}">Events</a>
+              <a class="dropdown-item" href="{{ url_for('activityanalysis') }}">Analysis</a>
+            </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" id="navbarDropdown" style="cursor: pointer;" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Impact
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <p class="dropdown-item" style="font-weight:800; margin: 0;">Damage</p>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/damage">Damage</a>
+            <a class="dropdown-item" href="/tsunami">Tsunami</a>
+            <a class="dropdown-item" href="/damagecost">Damage Cost</a>
+            <div class="dropdown-divider"></div>
+            <p class="dropdown-item" style="font-weight:800; margin: 0;">Financial</p>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/gold">Gold Analysis</a>
+            <a class="dropdown-item" href="/sp500">S&P 500 Analysis</a>
+            <a class="dropdown-item" href="/intermarket">Intermarket Analysis</a>
+            <a class="dropdown-item" href="/marketmodels">Impact Models</a>
+          </div>
+        </li>
+        <li>
+            <a class="nav-link" href="{{ url_for('predictions') }}">Prediction</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,154 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title>QuakeSpect - Predictions</title>
+{% endblock headers %}
+
+{% block body %}
+<div class="col-md-8 px-0">
+    <h1 class="display-4" style="margin-top: 10px;">Earthquake Predictions</h1>
+    <p class="lead">
+        This map presents the percent likelihood of a magnitude 5.5 or greater event in any 7 day period. 
+        These predictions were calculated from <a href="https://earthquake.usgs.gov/earthquakes/search/">USGS data</a> in the 30 year period between 1989 and 2019. <a href="#writeup">Read below</a> to learn more.
+    </p>
+</div>
+
+<div id="accordion" style="margin-bottom: 2rem">
+    <div class="card bg-light">
+        <h6 class="card-header" id="heading" data-toggle="collapse" data-target="#collapse" aria-expanded="true" aria-controls="collapse" style="cursor: pointer;">
+            Predictive Map &#9662;
+        </h6>
+        <div id="collapse" class="collapse show" aria-labelledby="heading" data-parent="#accordion">
+            <iframe src="/static/likelihoods.html" frameborder="0" style="width: 100%; height: 70vh"></iframe>
+        </div>
+    </div>
+</div>
+
+<div style="max-width: 800px">
+    <h2 id='writeup'>Predicting Earthquake Events</h2>
+    <p class="small">
+        <em>Authored by <a href="http://chrisluedtke.com">Chris Luedtke</a></em>
+    </p>
+
+    <p>Some seismologists claim earthquake prediction is an inherently impossible task. While respecting this perspective, we maintain a healthy optimism that technical advancements will make this critical problem tractable. In the development of our above model, we reviewed recent academic publications implementing new machine learning techniques with some success. We link to those articles and provide notes <a href="https://github.com/labs13-quake-viewer/ds-notebooks/blob/master/Research.md">on GitHub</a>. Below we present our process in developing our own baseline predictive model.</p>
+
+    <h3>Gathering Data</h3>
+
+    <p>We begin our analysis with data made available by the USGS, which was the most accessible and complete catalog we found. The USGS is transparent that <a href="https://earthquake.usgs.gov/data/comcat/data-availability.php">this catalog is not complete</a> and should not be treated as such. Incomplete data are a universal challenge in earthquake modeling and in data science more broadly.</p>
+
+    <p>In this case, missing data can be categorized in two ways: 1) missing due to recency and 2) missing due to detective ability.</p>
+
+    <h4>Missing Data Due to Recency</h4>
+
+    <p>To assess this category of missing data, we consider magnitude 4 or greater earthquake events occurring in 2019 to date.</p>
+
+    <p>In <strong>Figure 1</strong> we see a dramatic decrease in magnitude 4-5 events in the last month. We presume this does not represent actual earthquake activity, but rather suggests missing data.</p>
+        
+    <div id="accordionOne" style="margin-bottom: 20px">
+        <div class="card bg-light">
+            <h6 class="card-header" id="headingOne" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" style="cursor: pointer;">
+                Figure 1: Reduction in Events Over the Past 30 Days &#9662;
+            </h6>
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionOne">
+                <a href="/static/recency_freq.png">
+                    <img src="/static/recency_freq.png" width="100%">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <p>The USGS catalog is constantly evolving as earthquake events are created or modified retroactively. This is demonstrated in <strong>Figure 2</strong>, which shows that the majority are updated more than 50 days after they occur.</p>
+
+    <div id="accordionTwo" style="margin-bottom: 20px">
+        <div class="card bg-light">
+            <h6 class="card-header" id="headingTwo" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo" style="cursor: pointer;">
+                Figure 2: Lag Period of Retroactive Catalog Edits &#9662;
+            </h6>
+            <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordionTwo">
+                <a href="/static/update_dist.png">
+                    <img src="/static/update_dist.png" style="width:100%;">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <p>Missing data due to recency make real-time predictive models difficult to deploy. If we were to update a predictive model on current events, our model would get the mistaken impression that fewer earthquakes had occured recently than have actually taken place. We could only base predictions on events which the USGS can reliably publish on a timely basis for each region on Earth.</p>
+
+    <p>We did not employ a rigorous solution to this category of missing data. We limited our analysis to events prior to 2019 in hopes that the majority of earthquake events had already been logged.</p>
+
+    <h4>Missing Data Due to Detective Ability</h4>
+    <p>Earthquake sensors across the world are incapable of detecting even a majority of earthquake events. To demonstrate, we consider all magnitude 2 or greater earthquakes between 1989 and 2019.</p>
+
+    <p>The Gutenberg–Richter law provides a starting point to assess these missing data:</p>
+    
+    <blockquote class="blockquote" style="max-width: 750px; padding: 15px; border: 1px solid rgb(156, 156, 156); border-radius: 5px;">
+    <p><em>The Gutenberg–Richter law expresses the relationship between the magnitude and total number of earthquakes in any given region and time period of <strong>at least</strong> that magnitude.</em></p>
+    <p>log<sub>10</sub><em>N</em> = a - b<em>M</em></p>
+    <footer class="blockquote-footer">Wikipedia, <a href="https://en.wikipedia.org/wiki/Gutenberg%E2%80%93Richter_law"><cite title="Source Title">Gutenberg–Richter law</cite></a></footer>
+    </blockquote>
+
+    <p>Seismologists use this law to identify the magnitude threshold, M<sub>c</sub>, above which an earthquake catalog is deemed to be complete. We did the same for the USGS catalog by iteratively increasing M<sub>c</sub>, computing a linear regression, and keeping the M<sub>c</sub> for which the linear regression best fit our observed data. <strong>Figure 3</strong> displays our results.</p>
+
+    <div id="accordionThree" style="margin-bottom: 20px">
+        <div class="card bg-light">
+            <h6 class="card-header" id="headingThree" data-toggle="collapse" data-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree" style="cursor: pointer;">
+                Figure 3: Observed Earthquake Events Versus Expected &#9662;
+            </h6>
+            <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordionThree">
+                <a href="/static/gr_law.png">
+                    <img src="/static/gr_law.png" style="width:100%;">
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <p>These missing data are handled by simply dropping all records below the identified M<sub>c</sub>.</p>
+
+    <h3>The Spatial Dimension</h3>
+
+    <p>For each previously mentioned data quality concern, one must also consider regional characteristics. For example, we expect that the USGS both detects more earthquakes in the United States and also publishes those events more rapidly.</p>
+
+    <p>There are a number of approaches to this dimension of our analysis. Ideally, we would access a database containing precise coordinate locations and time periods of all seismic sensor stations on earth. Alternatively, we would find existing seismic region definitions based on observed seismic properties.</p>
+
+    <p>In our approach, we place 4,000 approximately equidistant nodes across the Earth and assess the data nearest to each node. See <strong>Figure 4</strong>.</p>
+
+    <div id="accordionFour" style="margin-bottom: 20px">
+        <div class="card bg-light">
+            <h6 class="card-header" id="headingFour" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour" style="cursor: pointer;">
+                Figure 4: Equidistant Sampling Nodes &#9662;
+            </h6>
+            <div id="collapseFour" class="collapse show" aria-labelledby="heading" data-parent="#accordionFour">
+                <iframe src="/static/eq_pts.html" frameborder="0" style="width: 100%; height: 50vh"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <p>Since we ultimately care about predicting large earthquakes, we first cluster only magnitude 5.5 or greater events to their nearest node. Limiting to these nodes greatly reduces computation cost, as we needed only 22% of our 4,000 node locations to capture all 5.5+ magnitude events. <strong>Figure 5</strong> displays these nodes.</p>
+
+    <div id="accordionFive" style="margin-bottom: 20px">
+        <div class="card bg-light">
+            <h6 class="card-header" id="headingFive" data-toggle="collapse" data-target="#collapseFive" aria-expanded="true" aria-controls="collapseFive" style="cursor: pointer;">
+                Figure 5: Sampling Nodes of Interest &#9662;
+            </h6>
+            <div id="collapseFive" class="collapse show" aria-labelledby="heading" data-parent="#accordionFive">
+                <iframe src="/static/eq_pts_filtered.html" frameborder="0" style="width: 100%; height: 50vh"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <p>With the important nodes identified, we clustered all earthquake events to these filtered nodes. We applied a distance filter consistent with the maximum distance that any 5.5+ magnitude event occured from its nearest node (about 250 kilometers).</p>
+
+    <h3>Baseline Predictions</h3>
+
+    <p>To get our baseline predictive model, for each cluster we counted the number of weeks in which a 5.5+ magnitude event occured. We then divided this by the total number of weeks in our dataset. This gives a percent likelihood of 5.5+ magnitude earthquake for each node. A cluster in which 15 weeks contained magnitude 5.5+ earthquakes corresponds to roughly a 1% chance of 5.5+ magnitude earthquake in any given week.</p>
+    
+    <p>This baseline relies on the assumption that the USGS has accurately cataloged all 5.5+ magnitude earthquakes since 1989.</p>
+
+    <p>Finally, we re-added the nodes in which no 5.5+ magnitude earthquakes have occured and assigned 0% likelihood to those nodes. This gave us a complete grid of nodes over the Earth along with their earthquake likelihood values. We used these values to produce the final contour map presented above.</p>
+
+    <div style="margin-top: 2rem;">
+        <a href="https://github.com/labs13-quake-viewer/ds-notebooks/blob/master/Chris-Luedtke.ipynb" target="blank" class="btn btn-primary">View Notebook</a>
+        <a href="#top" class="btn btn-light float-right">Back to Top</a>
+    </div>
+</div>
+{% endblock body %}

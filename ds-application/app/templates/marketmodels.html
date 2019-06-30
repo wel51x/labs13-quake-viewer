@@ -1,0 +1,335 @@
+{% extends 'layout.html' %}
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:x="urn:schemas-microsoft-com:office:excel"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+{% block headers %}
+<meta http-equiv=Content-Type content="text/html; charset=macintosh">
+<meta name=ProgId content=Excel.Sheet>
+<meta name=Generator content="Microsoft Excel 15">
+<link rel=File-List href="ModelMatrix.fld/filelist.xml">
+<style>
+<!--table
+	{mso-displayed-decimal-separator:"\.";
+	mso-displayed-thousand-separator:"\,";}
+@page
+	{margin:.75in .7in .75in .7in;
+	mso-header-margin:.3in;
+	mso-footer-margin:.3in;}
+.style0
+	{mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	white-space:nowrap;
+	mso-rotate:0;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri, sans-serif;
+	mso-font-charset:0;
+	border:none;
+	mso-protection:locked visible;
+	mso-style-name:Normal;
+	mso-style-id:0;}
+td
+	{mso-style-parent:style0;
+	padding-top:1px;
+	padding-right:1px;
+	padding-left:1px;
+	mso-ignore:padding;
+	color:black;
+	font-size:12.0pt;
+	font-weight:400;
+	font-style:normal;
+	text-decoration:none;
+	font-family:Calibri, sans-serif;
+	mso-font-charset:0;
+	mso-number-format:General;
+	text-align:general;
+	vertical-align:bottom;
+	border:none;
+	mso-background-source:auto;
+	mso-pattern:auto;
+	mso-protection:locked visible;
+	white-space:nowrap;
+	mso-rotate:0;}
+.xl65
+	{mso-style-parent:style0;
+	text-align:center;}
+.xl66
+	{mso-style-parent:style0;
+	text-align:right;}
+.xl67
+	{mso-style-parent:style0;
+	border:1.0pt solid windowtext;}
+.xl68
+	{mso-style-parent:style0;
+	text-align:center;
+	border:1.0pt solid windowtext;}
+.xl69
+	{mso-style-parent:style0;
+	border-top:none;
+	border-right:1.0pt solid windowtext;
+	border-bottom:none;
+	border-left:none;}
+.xl70
+	{mso-style-parent:style0;
+	text-align:center;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;}
+.xl71
+	{mso-style-parent:style0;
+	mso-number-format:"0\.000_ \;\[Red\]\\-0\.000\\ ";
+	border:1.0pt solid windowtext;}
+.xl72
+	{mso-style-parent:style0;
+	text-align:center;
+	vertical-align:middle;
+	border:1.0pt solid windowtext;
+	white-space:normal;}
+.xl73
+	{mso-style-parent:style0;
+	border-top:1.0pt solid windowtext;
+	border-right:1.0pt solid windowtext;
+	border-bottom:none;
+	border-left:1.0pt solid windowtext;}
+.xl74
+	{mso-style-parent:style0;
+	text-align:center;
+	border-top:none;
+	border-right:1.0pt solid windowtext;
+	border-bottom:1.0pt solid windowtext;
+	border-left:1.0pt solid windowtext;}
+-->
+</style>
+{% endblock headers %}
+
+{% block body %}
+<div class="col-md-11 px-0">
+    <h1 class="display-4" style="margin-top: 10px;">Financial Markets Impact Models</h1>
+    <p></p>
+    <p>The modeling results presented here indicate that - at least for Gold and the S&P 500 - the
+            occurrence of earthquakes is a poor predictor of the direction of financial markets. 
+            Of primary importance is the measure known as accuracy: it measures how well a model
+            performs when compared to a set of actual outcomes - values unknown to the model when 
+            it was devised. The model score is a measure of the internal efficacy of the model and 
+            is included here for completeness.
+            The best result obtained was 9.21% accuracy; this was using an
+            <a href="https://machinelearningmastery.com/gentle-introduction-xgboost-applied-machine-learning/">XGBoost</a>
+            model for Gold prices after a 6.7 earthquake. From there things get worse:  
+            <a href="https://towardsdatascience.com/an-implementation-and-explanation-of-the-random-forest-in-python-77bf308a9b76">Random Forest Regressor</a>
+            models perform significantly less effectively; and
+            <a href="https://towardsdatascience.com/linear-regression-understanding-the-theory-7e53ac2831b5">Linear</a>
+            and  
+            <a href="https://medium.com/data-science-group-iitr/logistic-regression-simplified-9b4efe801389">Logistic</a>
+            Regression models give especially poor results. Another interesting observation is that when the
+            threshold is decreased from Magnitude 6.7+ to 5.5+ (resulting in an approximately twelvefold
+            increase in the number of incidents used in the model), the accuracy decreased significantly.
+            A final point is that the XGBoost models using the Mag 5.5+ dataset - running in a maxed-out
+            <a href="https://aws.amazon.com/ec2/instance-types/p3/">ml.p3.16xlarge</a>
+            <a href="https://www.bmc.com/blogs/amazon-sagemaker/">AWS Sagemaker</a>
+             notebook instance - ran approximately 12 days of CPU (yes!) for the S&P 500
+            model and 10 days for the Gold model.</p>
+        <p>NOTE: These results essentially confirm what numerous other sources have indicated - that indeed
+        an earthquake typically has virtually no impact on the Financial Markets; see for example
+        <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0133319">here,</a>
+        <a href="https://earthquakespectra.org/doi/abs/10.1193/1.4000103?journalCode=eqsa">here</a> and
+        <a href="https://www.nasdaq.com/article/5-worst-disasters-how-did-the-stock-market-react-cm68124">here</a>.
+        The one exception of note is the incident that occurred in  
+        <a href="https://en.wikipedia.org/wiki/2011_Tōhoku_earthquake_and_tsunami">Japan in March 2011</a>,
+         which saw the <a href="https://en.wikipedia.org/wiki/Nikkei_225">Nikkei 225</a> drop some
+          23% following the incident; but this may well be
+        mitigated by two factors: one is the subsequent tsunami and the attendant nuclear reactor disaster,
+         and the other is fact that the 93% of Nikkei
+        225 Futures traders were bullish just days before the earthquake hit - a notoriously bearish indicator.
+        </p>
+       <br/>
+        <div class="card table-card winstons">
+          <table border=0 cellpadding=0 cellspacing=0 width=684 style='border-collapse:
+        collapse;table-layout:fixed;width:765pt'>
+        <col width=147 span=2 style='mso-width-source:userset;mso-width-alt:4693;
+        width:110pt'>
+        <col width=21 style='mso-width-source:userset;mso-width-alt:682;width:16pt'>
+        <col width=87 span=2 style='width:65pt'>
+        <col width=21 style='mso-width-source:userset;mso-width-alt:682;width:16pt'>
+        <col width=87 span=2 style='width:65pt'>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 width=147 style='height:17.0pt;width:110pt'></td>
+        <td class=xl66 width=147 style='width:110pt'>Financial Instrument</td>
+        <td class=xl69 width=21 style='width:16pt'>&nbsp;</td>
+        <td colspan=2 class=xl68 width=174 style='border-left:none;width:130pt'>Gold</td>
+        <td class=xl68 width=21 style='border-left:none;width:16pt'>&nbsp;</td>
+        <td colspan=2 class=xl68 width=174 style='border-left:none;width:130pt'>S&amp;P
+        500</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 style='height:17.0pt'></td>
+        <td class=xl66>Incident Magnitude</td>
+        <td class=xl69>&nbsp;</td>
+        <td class=xl68 style='border-top:none;border-left:none'>6.7+</td>
+        <td class=xl68 style='border-top:none;border-left:none'>5.5+</td>
+        <td class=xl68 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl68 style='border-top:none;border-left:none'>6.7+</td>
+        <td class=xl68 style='border-top:none;border-left:none'>5.5+</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 style='height:17.0pt'></td>
+        <td class=xl66>Incident Count</td>
+        <td class=xl69>&nbsp;</td>
+        <td class=xl67 align=right style='border-top:none;border-left:none'>1445</td>
+        <td class=xl67 align=right style='border-top:none;border-left:none'>23510</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl67 align=right style='border-top:none;border-left:none'>1870</td>
+        <td class=xl67 align=right style='border-top:none;border-left:none'>28350</td>
+        </tr>
+        <tr height=21 style='height:16.0pt'>
+        <td height=21 class=xl65 style='height:16.0pt'>Model Type</td>
+        <td colspan=2 style='mso-ignore:colspan'></td>
+        <td class=xl73 style='border-top:none'>&nbsp;</td>
+        <td class=xl73 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td></td>
+        <td class=xl73 style='border-top:none'>&nbsp;</td>
+        <td class=xl73 style='border-top:none;border-left:none'>&nbsp;</td>
+        </tr>
+        <tr height=11 style='mso-height-source:userset;height:8.0pt'>
+        <td height=11 class=xl66 style='height:8.0pt'></td>
+        <td class=xl66></td>
+        <td></td>
+        <td class=xl74>&nbsp;</td>
+        <td class=xl74 style='border-left:none'>&nbsp;</td>
+        <td class=xl65></td>
+        <td class=xl74>&nbsp;</td>
+        <td class=xl74 style='border-left:none'>&nbsp;</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td rowspan=3 height=69 class=xl70 style='height:51.0pt'>Linear Regression</td>
+        <td class=xl67 style='border-left:none'>Model Score</td>
+        <td class=xl67 style='border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.009 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.003 </td>
+        <td class=xl71 style='border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.011 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.001 </td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 class=xl67 style='height:17.0pt;border-top:none;border-left:
+        none'>RMSE</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>5.996 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>5.604 </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>4.270 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>4.317 </td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 class=xl67 style='height:17.0pt;border-top:none;border-left:
+        none'>R-square</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>-0.012 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.001 </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>-0.012 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>1.414 </td>
+        </tr>
+        <tr height=11 style='mso-height-source:userset;height:8.0pt'>
+        <td height=11 class=xl67 style='height:8.0pt;border-top:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td rowspan=2 height=46 class=xl70 style='height:34.0pt;border-top:none'>Logistic
+        Regression</td>
+        <td class=xl67 style='border-top:none;border-left:none'>Model Score</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.004 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.006 </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.003 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.005 </td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 class=xl67 style='height:17.0pt;border-top:none;border-left:
+        none'>Accuracy</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.00% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.59% </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.21% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.31% </td>
+        </tr>
+        <tr height=11 style='mso-height-source:userset;height:8.0pt'>
+        <td height=11 class=xl67 style='height:8.0pt;border-top:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td rowspan=2 height=46 class=xl72 width=147 style='height:34.0pt;border-top:
+        none;width:110pt'>Random Forest Regressor</td>
+        <td class=xl67 style='border-top:none;border-left:none'>Model Score</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.912 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.989 </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.895 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.986 </td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 class=xl67 style='height:17.0pt;border-top:none;border-left:
+        none'>Accuracy</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>6.14% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>1.33% </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>4.42% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>1.30% </td>
+        </tr>
+        <tr height=11 style='mso-height-source:userset;height:8.0pt'>
+        <td height=11 class=xl67 style='height:8.0pt;border-top:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td rowspan=2 height=46 class=xl72 width=147 style='height:34.0pt;border-top:
+        none;width:110pt'>XGBoost</td>
+        <td class=xl67 style='border-top:none;border-left:none'>Model Score</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.144 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.485 </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.181 </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>0.449 </td>
+        </tr>
+        <tr height=23 style='height:17.0pt'>
+        <td height=23 class=xl67 style='height:17.0pt;border-top:none;border-left:
+        none'>Accuracy</td>
+        <td class=xl67 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>9.21% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>6.05% </td>
+        <td class=xl71 style='border-top:none;border-left:none'>&nbsp;</td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>7.28% </td>
+        <td class=xl71 align=right style='border-top:none;border-left:none'>5.12% </td>
+        </tr>
+          </table>
+        </div>  
+</div>
+{% endblock body %}

@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block headers %}
+<title>Quakespect Tsunami Impact</title>
+{% endblock headers %}
+
+{% block body %}
+<div>
+    <h1 class="display-4" style="margin-top: 10px;">Tsunami</h1>
+    <p class="lead">
+      The Effect of an Earthquake Generated Tsunami on Damage Numbers
+    </p>
+    <div class="danielles-grid">
+      <iframe width="630" height="490" frameborder="0" scrolling="no" src="//plot.ly/~dlromanoff/135.embed"></iframe>
+      <iframe width="630" height="490" frameborder="0" scrolling="no" src="//plot.ly/~dlromanoff/133.embed"></iframe>
+    </div>
+    <p>Moving the mouse over the graph will provide you more specific information.</p> 
+    <p>The charts here show the average damage for each category listed. The chart on the left shows damage from earthquakes that generated a tsunami. The numbers shown here include the damage caused by the tsunami. The right chart shows damage caused by an earthquake that didn't have an associated tsunami. The numbers are damage caused strictly by an earthquake at the given magnitude.</p>
+    <p>The charts give us some idea of the relationship between the damage caused by an earthquake that generates a tsunami and one that doesn't. We can see only so much in the graphs. So, in addition to the graphs, below are some t-tests and p-values for each of the categories in the graphs above.</p>
+    <div class="card table-card">
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Feature</th>
+          <th scope="col">Statistic</th>
+          <th scope="col">p-value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">Magnitude</th>
+          <td>18.1456</td>
+          <td>1.1599e-64</td>
+        </tr>
+        <tr>
+          <th scope="row">Deaths</th>
+          <td>1.7026</td>
+          <td>0.0889</td>
+        </tr>
+        <tr>
+          <th scope="row">Missing</th>
+          <td>0.5182</td>
+          <td>0.6044</td>
+        </tr>
+        <tr>
+          <th scope="row">Injuries</th>
+          <td>1.2452</td>
+          <td>0.2133</td>
+        </tr>
+        <tr>
+          <th scope="row">Cost of Damage</th>
+          <td>0.8779</td>
+          <td>0.3802</td>
+        </tr>
+        <tr>
+          <th scope="row">Houses Damaged</th>
+          <td>1.2679</td>
+          <td>0.2051</td>
+        </tr>
+        <tr>
+          <th scope="row">Houses Destroyed</th>
+          <td>1.4622</td>
+          <td>0.1440</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The t-tests above are comparing the relationship between an occurrence of a tsunami or not and each of the features listed.</p>
+    
+      <p>The null hypothesis: There is no significant difference between the damage caused by an earthquake that generated a tsunami and one with no associated tsunami.</p>
+       
+      <p>The p-value or probability value is the probability that the null hypothesis is true. In order to accept a test result we want the p-value to be less than 0.05.</p>
+
+       <p>The p-value in all the tests except the first are greater than 0.05 which would lead us to not reject our null hypothesis. Deaths was the only one even close to 0.05 but still gave us a greater value.</p>
+      
+      <p>The first t-test gave us a significant result. The small p-value leads us to reject our null hypothesis and conclude that the presence of a tsunami is associated with larger magnitude events. However, to gain more insight, we would need to identify earthquakes that occurred in the ocean only, collect that data, and re-run the t-test.</p>
+      
+       <p>The graph below shows the spread of the magnitude with and without a tsunami.<p>
+    
+    <img src="{{ url_for('static', filename='images/test_figure.jpeg') }}" alt="" class="test-figure">
+    <a href="https://colab.research.google.com/github/labs13-quake-viewer/ds-notebooks/blob/master/Plots.ipynb" target="blank" class="btn btn-primary notebook-btn">View Notebook</a>
+</div>
+
+{% endblock body %}

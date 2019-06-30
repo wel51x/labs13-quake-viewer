@@ -1,0 +1,7 @@
+pandas
+requests
+gunicorn
+python-dotenv
+python-dateutil
+flask
+folium
